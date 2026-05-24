@@ -1,0 +1,142 @@
+---
+title: "Group 5_Finding Minimum Cost and Maximum Profit Using R"
+output: pdf_document
+date: "2026-04-27"
+---
+
+
+## PART 1
+
+1. Use the data set assigned to your group  
+2. Display the dataset  
+3. Check the structure of the data  
+```{r}
+coffee_dataset_group_5 <- read.csv("coffee_dataset_group_5.csv")
+coffee_dataset_group_5
+```
+```{r}
+str(coffee_dataset_group_5)
+```
+### QUESTION SET 1
+
+How many observations are in the dataset?  
+- There are 9 observations.
+What variables are included?  
+- There are 4 variables in the dataset and all are integers.
+
+
+## PART 2
+
+1. Create the following new variables:
+  - Total Cost
+  - Revenue
+  - Profit
+  - Average Cost
+```{r}
+coffee_dataset_group_5$Total_Cost <- coffee_dataset_group_5$Fixed_Cost + (coffee_dataset_group_5$Variable_Cost_per_Unit * coffee_dataset_group_5$Quantity)
+
+coffee_dataset_group_5$Revenue <- coffee_dataset_group_5$Quantity * coffee_dataset_group_5$Price
+
+coffee_dataset_group_5$Profit <- coffee_dataset_group_5$Revenue - coffee_dataset_group_5$Total_Cost
+
+coffee_dataset_group_5$Average_Cost <- ifelse(coffee_dataset_group_5$Quantity == 0, NA, coffee_dataset_group_5$Total_Cost / coffee_dataset_group_5$Quantity)
+```
+
+
+## PART 3
+
+Identify:  
+  1. The minimum average cost  
+  2. The quantity where it occurs
+```{r}
+min_cost <- min(coffee_dataset_group_5$Average_Cost, na.rm = TRUE)
+
+qty_min_cost <- coffee_dataset_group_5$Quantity[which.min(coffee_dataset_group_5$Average_Cost)]
+
+cat("Minimum average cost is", min_cost, "and it occurs at quantity", qty_min_cost)
+```
+### QUESTION SET 2
+
+What is the minimum average cost?  
+- The minimum average cost is 100.25.
+
+At what quantity does it occur?  
+- The minimum average cost occurs in quantity 80.
+
+Why might costs increase after this point?  
+- Cost increases after a certain point due to the law of diminishing returns, where adding more inputs results in less efficient production.
+
+
+## PART 4
+
+Identify:  
+  1. Maximum profit  
+  2. Quantity where profit is highest
+```{r}
+max_cost <- max(coffee_dataset_group_5$Profit, na.rm = TRUE)
+
+qty_max_cost <- coffee_dataset_group_5$Quantity[which.max(coffee_dataset_group_5$Profit)]
+
+cat("Maximum Profit is", max_cost, "and it occurs at quantity", qty_max_cost)
+```
+### QUESTION SET 3
+
+What is the maximum profit?  
+- The maximum profit is 1300.  
+At what quantity is profit maximized?  
+- The maximum profit occurs at quantity 100  
+What happens to profit after this point?  
+- After quantity 100 profit rapidly declines leading to large losses.
+
+
+## PART 5
+
+Create two graphs using `ggplot2`.  
+Graph 1  
+  Plot:  
+    1. Quantity (x-axis)  
+    2. Total Cost and Revenue (two lines)  
+Graph 2  
+  Plot:  
+    1. Quantity (x-axis)  
+    2. Profit (line)  
+```{r}
+library(ggplot2)
+
+# Graph 1
+ggplot(coffee_dataset_group_5, aes(x = Quantity)) +
+  geom_line(aes(y = Total_Cost, color = "Total Cost"), linewidth = 1.1) +
+  geom_point(aes(y = Total_Cost, color = "Total Cost"), size = 2) +
+  
+  geom_line(aes(y = Revenue, color = "Revenue"), linewidth = 1.1) +
+  geom_point(aes(y = Revenue, color = "Revenue"), size = 2) +
+  
+  labs(
+    title = "Total Cost vs Revenue",
+    x = "Quantity",
+    y = "Amount",
+    color = "Legend"
+  ) +
+  theme_minimal()
+```
+```{r}
+# Graph 2
+ggplot(coffee_dataset_group_5, aes(x = Quantity, y = Profit)) +
+  geom_line(linewidth = 1.1, color = "blue") +
+  geom_point(size = 2, color = "blue") +
+  labs(
+    title = "Profit vs Quantity",
+    x = "Quantity",
+    y = "Profit"
+  ) +
+  theme_minimal()
+```
+### QUESTION SET 4
+
+Where do Revenue and Cost intersect?  
+- They intersect on two points somewhere around (Total Cost 4940, Revenue 4600) and (Total Cost 13220, Revenue 13800).  
+What does that point represent?  
+- These points represents the break-even points.
+
+
+
