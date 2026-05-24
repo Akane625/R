@@ -1,0 +1,152 @@
+---
+title: "Group 5 Cost, Revenue and Policy Shocks"
+output: pdf_document
+date: "2026-04-29"
+---
+
+## Part VI
+
+What is the difference between base price and new price?  
+- Base price is the starting/initial price a business set while new price is a change in the base price.  
+
+Who do you think bears the tax in this dataset—the firm or consumers?  
+- The firm is mainly the one who bears the tax in this dataset since variable cost goes up rapidly while price does not change with more units produced. 
+
+
+## Part VII
+```{r}
+second_round_group_5 <- read.csv("second_round_group_5.csv")
+
+second_round_group_5$New_Revenue <- second_round_group_5$New_Price * second_round_group_5$Quantity
+
+second_round_group_5$New_Total_Cost <- second_round_group_5$Fixed_Cost + (second_round_group_5$Variable_Cost_per_Unit * second_round_group_5$Quantity) + (second_round_group_5$Tax_per_Unit * second_round_group_5$Quantity)
+
+second_round_group_5$New_Profit <- second_round_group_5$New_Revenue - second_round_group_5$New_Total_Cost
+
+second_round_group_5$Revenue <- second_round_group_5$Base_Price * second_round_group_5$Quantity
+
+second_round_group_5$Total_Cost <- second_round_group_5$Fixed_Cost + (second_round_group_5$Variable_Cost_per_Unit * second_round_group_5$Quantity)
+
+second_round_group_5$Profit <- second_round_group_5$Revenue - second_round_group_5$Total_Cost
+```
+
+
+## Part VIII
+
+Identify original profit-maximizing quantity  
+- Original profit of 1300 is achieved by a quantity of 100,  
+
+Identify new profit-maximizing quantity  
+- New profit of 1100 is achieved by a quantity of 100.  
+
+Did the profit-maximizing quantity increase or decrease?  
+- The profit maximizing quantity stayed the same.  
+
+Did maximum profit increase or decrease?  
+- The maximum profit decreased.  
+
+Which had a bigger effect: the tax or the price change?  
+- The tax had the bigger effect when comparing original (no tax) and new (include tax) profit. In addition, the tax per unit is higher than the price change so the firm has to bear the remaining tax.
+
+
+## Part IX
+
+How does a per-unit tax affect costs?  
+- A per-unit tax increases the firm’s cost of producing each additional unit. This means every unit produced becomes more expensive for the firm.  
+
+Why does the firm adjust its production level after the tax?  
+- The firm reduces its production level because the tax increases marginal cost. As a result, producing additional units becomes less profitable, so the firm lowers output to the new profit-maximizing level.  
+
+If price increased, why might profit still decrease?  
+- Profit may still decrease because the increase in price is not enough to fully cover the additional cost from the tax. Since the tax raises production costs more than the price increase compensates, the firm’s profit decreases.
+
+
+## Part X
+```{r}
+library(ggplot2)
+
+# Original Profit
+ggplot(second_round_group_5, aes(x = Quantity, y = Profit)) +
+  geom_line(color = "blue", linewidth = 1) +
+  geom_point(color = "blue", size = 2) +
+  labs(
+    title = "Original Profit vs Quantity",
+    x = "Quantity",
+    y = "Profit"
+  ) +
+  theme_minimal()
+```
+
+```{r}
+# New Profit
+ggplot(second_round_group_5, aes(x = Quantity, y = New_Profit)) +
+  geom_line(color = "red", linewidth = 1) +
+  geom_point(color = "red", size = 2) +
+  labs(
+    title = "New Profit vs Quantity (After Tax & Price Change)",
+    x = "Quantity",
+    y = "Profit"
+  ) +
+  theme_minimal()
+```
+```{r}
+# Original Profit vs. New Profit
+ggplot(second_round_group_5, aes(x = Quantity)) +
+  geom_line(aes(y = Profit, color = "Original Profit"), linewidth = 1) +
+  geom_point(aes(y = Profit, color = "Original Profit"), size = 2) +
+  geom_line(aes(y = New_Profit, color = "New Profit"), linewidth = 1) +
+  geom_point(aes(y = New_Profit, color = "New Profit"), size = 2) +
+  labs(
+    title = "Profit Comparison",
+    x = "Quantity",
+    y = "Profit",
+    color = "Legend"
+  ) +
+  theme_minimal()
+```
+How did the profit curve shift?  
+- The profit curve shifted downward, indicating a decrease in profit at every level of output due to the added tax increasing costs.  
+
+Did the peak move left or right? What does this mean economically?  
+- The peak moved to the left, meaning the profit-maximizing quantity decreased. Economically, this indicates that the firm will produce fewer units after the tax because if they produce more they will lose more.
+
+
+Part XI
+```{r}
+ggplot(second_round_group_5, aes(x = Quantity)) +
+  geom_line(aes(y = Total_Cost, color = "Total Cost"), linewidth = 1.1) +
+  geom_point(aes(y = Total_Cost, color = "Total Cost"), size = 2) +
+  
+  geom_line(aes(y = Revenue, color = "Revenue"), linewidth = 1.1) +
+  geom_point(aes(y = Revenue, color = "Revenue"), size = 2) +
+  
+  labs(
+    title = "Total Cost vs Revenue",
+    x = "Quantity",
+    y = "Amount",
+    color = "Legend"
+  ) +
+  theme_minimal()
+```
+```{r}
+ggplot(second_round_group_5, aes(x = Quantity)) +
+  geom_line(aes(y = New_Total_Cost, color = "New Total Cost"), linewidth = 1.1) +
+  geom_point(aes(y = New_Total_Cost, color = "New Total Cost"), size = 2) +
+  
+  geom_line(aes(y = New_Revenue, color = "New Revenue"), linewidth = 1.1) +
+  geom_point(aes(y = New_Revenue, color = "New Revenue"), size = 2) +
+  
+  labs(
+    title = "New Total Cost vs New Revenue",
+    x = "Quantity",
+    y = "Amount",
+    color = "Legend"
+  ) +
+  theme_minimal()
+```
+Did the break-even quantity increase or decrease? Why?  
+- The break even point increased because the firm produces fewer revenue while having an increase in total cost.  
+
+Based on your results, should the firm expand, reduce, or maintain production under the new policy? Explain in 3–5 sentences.  
+- The firm should maintain their production. The maximizing profit is still at quantity 100 if they make anymore they lose a lot more, if they produce less they gain less. They continue to maintain until the tax has decrease or until they can increase their price further without risking a loss of customers.
+

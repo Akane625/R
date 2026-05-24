@@ -1,0 +1,10 @@
+Business,Quantity,Base_Price,New_Price,Fixed_Cost,Variable_Cost_per_Unit,Tax_per_Unit
+Rice Bowl Cart,0,115,122,2900,0,9
+Rice Bowl Cart,20,115,122,2900,47,9
+Rice Bowl Cart,40,115,122,2900,51,9
+Rice Bowl Cart,60,115,122,2900,56,9
+Rice Bowl Cart,80,115,122,2900,64,9
+Rice Bowl Cart,100,115,122,2900,73,9
+Rice Bowl Cart,120,115,122,2900,86,9
+Rice Bowl Cart,140,115,122,2900,101,9
+Rice Bowl Cart,160,115,122,2900,122,9
