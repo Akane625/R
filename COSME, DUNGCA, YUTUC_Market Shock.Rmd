@@ -1,0 +1,74 @@
+---
+title: "COSME, DUNGCA, YUTUC Market Shock"
+output: pdf_document
+date: "2026-03-10"
+---
+
+Supply Elasticity:  
+- E_Supply -> (log P + 2.0) / 1.7 -> 1 / 1.7 -> 0.5882 (inelastic, a 1% increase in price, leads to a 0.5882 percent increase in quantity supplied)
+
+Demand Elasticity:  
+- E_Demand -> (log P - 8.5) / -0.82 -> 1 / -0.82 -> |-1.2195| -> 1.2195 (elastic, a 1% increase in price, leads to a 1.2195 percent decrease in quantity demanded) 
+
+```{r}
+library(ggplot2)
+library(readxl)
+
+watermelon <- read_excel("watermelon.xlsx")
+
+logP <- seq(1.5, 2.5, length.out = 100)
+
+watermelon$log.pc[watermelon$log.pc == "NA"] <- NA
+watermelon$log.pv[watermelon$log.pv == "NA"] <- NA
+
+watermelon$log.pc <- as.numeric(watermelon$log.pc)
+watermelon$log.pv <- as.numeric(watermelon$log.pv)
+
+logC <- mean(watermelon$log.pc, na.rm = TRUE)
+logT <- mean(watermelon$log.pv, na.rm = TRUE)
+
+# supply function
+supply <- function(logP, CP, WW2){
+  2.42 + 0.58*logP - 0.32*logC - 0.12*logT + 0.07*CP - 0.36*WW2
+}
+
+df <- data.frame(
+  logP = rep(logP,4),
+  logQ = c(
+    supply(logP,0,0),
+    supply(logP,1,0),
+    supply(logP,0,1),
+    supply(logP,1,1)
+  ),
+  scenario = factor(rep(c(
+    "CP=0, WW2=0",
+    "CP=1, WW2=0",
+    "CP=0, WW2=1",
+    "CP=1, WW2=1"
+  ), each=100))
+)
+
+ggplot(df, aes(logQ, logP, color = scenario, linetype = scenario)) +
+  geom_line(linewidth = 1.2) +
+  labs(
+    x = "log Quantity",
+    y = "log Price",
+    title = "Watermelon Supply Curves Under Different Conditions",
+    color = "Scenario",
+    linetype = "Scenario"
+  ) +
+  theme_minimal() +
+  scale_color_brewer(palette = "Set1")
+```
+
+Interpretation on Estimated Supply Equation:  
+- LogP -> A 1% increase in watermelon price, increases watermelon quantity supplied by 0.58%, ceteris paribus  
+- LogC -> A 1% increase in cotton price, decreases watermelon quantity supplied by 0.32%, ceteris paribus  
+- LogT -> A 1% increase in vegetable price, decreases watermelon quantity supplied by 0.12%, ceteris paribus  
+- CP -> When the government cotton-acreage-allotment program is active (CP = 1), watermelon quantity supplied increases by 7%, ceteris paribus  
+- WW2 -> During World War II (WW2 = 1), watermelon quantity supplied decreases by 36%, ceteris paribus  
+
+Interpretation on Estimated Demand Equation:  
+- LogP -> A 1% increase in watermelon price, decreases per capita demanded by 1.13%, ceteris paribus  
+- Log(Y/N) -> A 1% increase in per capita income, increases per capita demanded by 1.75%, ceteris paribus  
+- LogF -> A 1% increase in freight (transportation) cost, decreases per capita demanded by 0.97%, ceteris paribus  
